@@ -1,12 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Web.Models.EF;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<FruitContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("FruitDb")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

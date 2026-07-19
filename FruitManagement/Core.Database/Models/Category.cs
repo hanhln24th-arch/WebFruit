@@ -1,5 +1,4 @@
-﻿using Core.Database.Interfaces;
-using Core.Database.Models;
+﻿using Core.Database.Interface;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,7 +10,7 @@ namespace Core.Database.Models
         [Key]
         public Guid Id { get; set; }
         [Required]
-        [StringLength(150)]
+        [MaxLength(150)]
         public string? Name { get; set; }
         [ForeignKey("ParentId")]
         public Guid? ParentId { get; set; }
@@ -23,5 +22,6 @@ namespace Core.Database.Models
         public ICollection<Product> Products { get; set; } = new HashSet<Product>();
         public ICollection<Category> ChildCategories { get; set; } = new HashSet<Category>();
         public ICollection<Role> Roles { get; set; } = new HashSet<Role>();
+
     }
 }
