@@ -1,8 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using WebFruit.Models.EF;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddDbContext<Fruit>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("FruitDb")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,8 +23,14 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapAreaControllerRoute(
+    name: "Admin",
+    areaName: "Admin",
+    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+app.Run(); app.Run();

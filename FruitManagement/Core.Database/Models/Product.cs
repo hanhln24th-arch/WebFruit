@@ -20,8 +20,5 @@ namespace Core.Database.Models
         [ForeignKey("CategoryId")]
         public Guid? CategoryId { get; set; }
         public Category? Category { get; set; }
-        public ICollection<Product> Products = new HashSet<Product>();
-        public ICollection<Category> Categories = new HashSet<Category>();
-
     }
 }
