@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Nhóm quyền";
+    Layout = "~/Areas/Admin/Views/Shared/_Admin.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">@ViewBag.Title</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="items" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Tên nhóm</th>
+                    <th style="width: 40px"></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+@section Css{
+    <link href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <style>
+        div.dt-buttons{
+            float: right;
+        }
+    </style>
+}
+@section Js{
+    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script>
+        $(function(){
+            var items = $("#items").DataTable({
+                "dom": 'Blfrtip',
+                "processing": true,
+                "serverSide": true,
+                "ajax":{
+                    "url": "/Admin/Group/GetList",
+                    "type": "POST",
+                    "dataType": "json"
+                },
+                "columns": [
+                {
+                    "data": null, "render": function (data, type, row, meta){return meta.row + 1;}
+                },
+                {
+                    "data" : "name"
+                },
+                {
+                   "data": null,
+                        "render": function (data, type, row, meta) {
+                            let tool = '<div class="btn-group">' +
+                                '<a href="#" data-toggle="dropdown" class="list-icons-items text-dark" aria-expanded="false">' +
+                                '<i class="fas fa-sort-amount-down"></i>' +
+                                '</a>' +
+                                '<div class="dropdown-menu" role="menu">' +
+                                '<a class="dropdown-item text-primary btnEdit" href="#" data-id="' + row.id + '"><i class="fas fa-pencil-alt mr-3"></i>Cập nhật</a>' +
+                                '<a class="dropdown-item text-danger btnDelete" href="#" data-id="' + row.id + '"><i class="fas fa-trash mr-3"></i>Xóa</a>' +
+                                '</div>' +
+                                '</div>';
+                            return tool;
+                    }
+                }
+              ],
+              "buttons": [
+                  {
+                    text: '<i class="fas fa-plus mr-2"></i> Thêm nhóm',
+                    className: 'btn btn-info pb-1',
+                    action: function (e, dt, node, config) {
+                        //Code
+                    }
+
+                }
+              ]
+            });
+        });
+    </script>
+}
+
