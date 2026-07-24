@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using System.Text.RegularExpressions;
 using WebFruit.Areas.Admin.Models;
 using WebFruit.Models.EF;
 
@@ -45,5 +46,46 @@ namespace WebFruit.Areas.Admin.Controllers
             };
             return Ok(jsonData);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetItems(Guid id)
+        {
+            if (_DbContext.Groups == null)
+                return NotFound();
+                var item = await _DbContext.Groups.FindAsync(id);
+                if (item == null)
+                    return NotFound();
+                return Ok(item);
+            }
+        [HttpPost]
+        public async Task<IActionResult> Save(GroupViewModel model)
+        {
+            Core.Database.Models.Group item;
+            if (model.Id == null)
+            {
+                item = new Core.Database.Models.Group();
+                item.Id = Guid.NewGuid();
+                await _DbContext.Groups.AddAsync(item);
+            }
+            else 
+            {
+                item = await _DbContext.Groups.FindAsync(model.Id);
+            }
+            item.Name = model.Name;
+            await _DbContext.SaveChangesAsync();
+            return Ok(item);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var memberInGroup = await _DbContext.Members.Where(m => m.GroupId == id).FirstOrDefaultAsync();
+            if (memberInGroup == null)
+            {
+                var item = await _DbContext.Groups.FindAsync(id);
+                _DbContext.Entry(item).State = EntityState.Deleted;
+                await _DbContext.SaveChangesAsync();
+                return Ok(true);
+            }
+            return Ok(false);
+        }
     }
-}
+    }
